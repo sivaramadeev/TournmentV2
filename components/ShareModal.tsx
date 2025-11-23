@@ -49,8 +49,9 @@ const ShareModal: React.FC<ShareModalProps> = ({ tournament, onClose, onSyncComp
             url.search = `?data=${gistId}&tournamentId=${tournament.id}`;
             url.hash = ''; // Ensure hash doesn't interfere
             setGeneratedLink(url.toString());
-        } catch (err: any) {
-            setError(err.message || 'An error occurred while syncing.');
+        } catch (err: unknown) {
+            const errorMessage = err instanceof Error ? err.message : 'An error occurred while syncing.';
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }

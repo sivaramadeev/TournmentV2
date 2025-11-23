@@ -32,8 +32,9 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLoginSuccess }) => {
                 user = authService.login(formData.email, formData.password);
             }
             onLoginSuccess(user);
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err: unknown) {
+            const errorMessage = err instanceof Error ? err.message : 'Authentication failed';
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }

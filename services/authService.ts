@@ -41,10 +41,16 @@ export const authService = {
             throw new Error('Invalid email or password');
         }
         
-        // Don't return password in session
-        const { password: _, ...userWithoutPass } = user;
-        localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(userWithoutPass));
-        return userWithoutPass;
+        // Explicitly create the return object to satisfy strict type checking
+        // We allow the password field to be undefined as per the User interface
+        const safeUser: User = {
+            id: user.id,
+            name: user.name,
+            email: user.email
+        };
+        
+        localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(safeUser));
+        return safeUser;
     },
 
     logout: () => {
