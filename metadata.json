@@ -1,0 +1,5 @@
+{
+  "name": "Copy of Tournament ManagerV2",
+  "description": "A comprehensive web application for managing tournaments. Administrators can set up tournaments, manage players via UI or CSV, generate round-robin fixtures, update live scores, and publish results. A public-facing view allows players to see tournament details, registered participants, and live match fixtures with real-time status updates.",
+  "requestFramePermissions": []
+}
