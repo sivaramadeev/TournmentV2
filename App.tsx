@@ -129,10 +129,9 @@ const App: React.FC = () => {
     };
 
     const deleteTournament = (id: string) => {
-        if (confirm('Are you sure you want to delete this tournament? This action cannot be undone.')) {
-            setTournaments(prev => prev.filter(t => t.id !== id));
-            if (activeTournamentId === id) setActiveTournamentId(null);
-        }
+        // Confirmation is handled in AdminTournamentList UI now
+        setTournaments(prev => prev.filter(t => t.id !== id));
+        if (activeTournamentId === id) setActiveTournamentId(null);
     };
     
     const handleImportTournaments = (importedData: Tournament[], mode: 'merge' | 'replace') => {

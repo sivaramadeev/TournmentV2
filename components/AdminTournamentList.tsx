@@ -14,6 +14,7 @@ interface AdminTournamentListProps {
 const AdminTournamentList: React.FC<AdminTournamentListProps> = ({ tournaments, onCreate, onSelect, onDelete, onImport }) => {
     const [isCreating, setIsCreating] = useState(false);
     const [newTournamentName, setNewTournamentName] = useState('');
+    const [deleteConfirmationId, setDeleteConfirmationId] = useState<string | null>(null);
 
     // Import Modal State
     const [isImportModalOpen, setImportModalOpen] = useState(false);
@@ -104,6 +105,17 @@ const AdminTournamentList: React.FC<AdminTournamentListProps> = ({ tournaments, 
         }
     };
 
+    const handleDeleteClick = (id: string) => {
+        setDeleteConfirmationId(id);
+    };
+
+    const confirmDelete = () => {
+        if (deleteConfirmationId) {
+            onDelete(deleteConfirmationId);
+            setDeleteConfirmationId(null);
+        }
+    };
+
     return (
         <div className="space-y-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
@@ -186,7 +198,7 @@ const AdminTournamentList: React.FC<AdminTournamentListProps> = ({ tournaments, 
                                     <EditIcon className="w-4 h-4" /> Manage
                                 </button>
                                 <button
-                                    onClick={() => onDelete(t.id)}
+                                    onClick={() => handleDeleteClick(t.id)}
                                     className="flex items-center gap-2 text-red-400 hover:text-red-300 transition-colors font-medium"
                                 >
                                     <DeleteIcon className="w-4 h-4" /> Delete
@@ -252,6 +264,37 @@ const AdminTournamentList: React.FC<AdminTournamentListProps> = ({ tournaments, 
                                     </div>
                                 </div>
                             )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {deleteConfirmationId && (
+                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+                    <div className="bg-gray-800 rounded-lg shadow-xl w-full max-w-sm border border-gray-700 animate-fade-in overflow-hidden">
+                        <div className="p-4 border-b border-gray-700 flex justify-between items-center">
+                             <h3 className="text-lg font-bold text-white">Confirm Deletion</h3>
+                             <button onClick={() => setDeleteConfirmationId(null)} className="text-gray-400 hover:text-white text-2xl">&times;</button>
+                        </div>
+                        <div className="p-6">
+                            <p className="text-gray-300 mb-6">
+                                Are you sure you want to delete this tournament? This action cannot be undone.
+                            </p>
+                            <div className="flex justify-end gap-3">
+                                <button 
+                                    onClick={() => setDeleteConfirmationId(null)}
+                                    className="px-4 py-2 bg-gray-600 hover:bg-gray-500 text-white rounded-md transition-colors"
+                                >
+                                    Cancel
+                                </button>
+                                <button 
+                                    onClick={confirmDelete}
+                                    className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors"
+                                >
+                                    Delete
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

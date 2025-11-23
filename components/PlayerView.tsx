@@ -56,8 +56,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({ tournament, onBack }) => {
                 return matchesSearch && matchesCategory;
             })
             .sort((a, b) => {
-                if (a.mobileNumber < b.mobileNumber) return -1;
-                if (a.mobileNumber > b.mobileNumber) return 1;
+                // Sort by name for public view since mobile is hidden
                 return a.name.localeCompare(b.name);
             });
     }, [tournament.players, searchTerm, selectedPlayerCategory]);
@@ -119,7 +118,7 @@ const PlayerView: React.FC<PlayerViewProps> = ({ tournament, onBack }) => {
                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                     <input
                         type="text"
-                        placeholder="Search by name or mobile..."
+                        placeholder="Search by name..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-brand-primary focus:border-brand-primary"
@@ -137,19 +136,14 @@ const PlayerView: React.FC<PlayerViewProps> = ({ tournament, onBack }) => {
                     <table className="min-w-full divide-y divide-gray-700">
                         <thead className="bg-gray-700/50">
                             <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Mobile Number</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Name</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Categories</th>
                             </tr>
                         </thead>
                         <tbody className="bg-gray-800 divide-y divide-gray-700">
-                            {filteredAndSortedPlayers.map((player, index) => {
-                                const showMobile = index === 0 || filteredAndSortedPlayers[index - 1].mobileNumber !== player.mobileNumber;
+                            {filteredAndSortedPlayers.map((player) => {
                                 return (
                                     <tr key={player.id}>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            {showMobile ? player.mobileNumber : ''}
-                                        </td>
                                         <td className="px-6 py-4 whitespace-nowrap">{player.name}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">{player.categories.join(', ')}</td>
                                     </tr>
