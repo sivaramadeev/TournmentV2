@@ -45,7 +45,8 @@ const ShareModal: React.FC<ShareModalProps> = ({ tournament, onClose, onSyncComp
             
             // Generate the link based on current location using URL API for robustness
             const url = new URL(window.location.href);
-            url.search = `?data=${gistId}`;
+            // Append both data (gistId) and tournamentId for direct loading support
+            url.search = `?data=${gistId}&tournamentId=${tournament.id}`;
             url.hash = ''; // Ensure hash doesn't interfere
             setGeneratedLink(url.toString());
         } catch (err: any) {

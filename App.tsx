@@ -39,9 +39,10 @@ const App: React.FC = () => {
                 if (!window.location.search) setCurrentView('admin');
             }
 
-            // 2. Check for cloud data (Gist)
+            // 2. Check for cloud data (Gist) or direct tournament ID
             const params = new URLSearchParams(window.location.search);
             const gistId = params.get('data');
+            const tournamentId = params.get('tournamentId');
             
             if (gistId) {
                 try {
@@ -57,14 +58,24 @@ const App: React.FC = () => {
                     setCurrentView('player'); // Viewer mode for shared links
                 } catch (error) {
                     console.error('Failed to load from cloud:', error);
-                    // Fallback to local
+                    // Fallback to local if Gist fails
                     const storedData = window.localStorage.getItem('tournamentServiceData');
                     if (storedData) {
                         const parsed: Tournament[] = JSON.parse(storedData);
-                        if (parsed.find(t => t.gistId === gistId)) {
+                        if (tournamentId && parsed.find(t => t.id === tournamentId)) {
+                             setActiveTournamentId(tournamentId);
+                             setCurrentView('player');
+                        } else if (parsed.find(t => t.gistId === gistId)) {
                              alert('Network error: Could not sync latest data. Showing cached version.');
                         }
                     }
+                }
+            } else if (tournamentId) {
+                // If direct tournament ID is provided without Gist (e.g., local bookmark)
+                const found = tournaments.find(t => t.id === tournamentId);
+                if (found) {
+                    setActiveTournamentId(tournamentId);
+                    setCurrentView('player');
                 }
             }
             setLoading(false);
