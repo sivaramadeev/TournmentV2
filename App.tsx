@@ -104,8 +104,9 @@ const App: React.FC = () => {
 
     // Mock functionality for SaaS (Changing own password in authService is not implemented in this mock, 
     // but we keep the UI flow for demonstration)
-    const handleChangePassword = (newPass: string) => {
+    const handleChangePassword = (_newPass: string) => {
         // In a real app, call API to change password
+        // Using underscore prefix to ignore unused variable warning
         setShowPasswordModal(false);
         alert('Password changed successfully.');
     };
