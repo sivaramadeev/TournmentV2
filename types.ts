@@ -1,8 +1,7 @@
 
-
 export type TournamentStatus = 'Draft' | 'Publishing' | 'Published';
 
-export type View = 'login' | 'admin' | 'player';
+export type View = 'login' | 'admin' | 'player' | 'auth';
 
 export enum MatchStatus {
   Scheduled = 'Scheduled',
@@ -11,6 +10,13 @@ export enum MatchStatus {
   WalkoverP1 = 'Walkover P1',
   WalkoverP2 = 'Walkover P2',
   Disqualified = 'Disqualified'
+}
+
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+  password?: string; // stored in localstorage for mock auth
 }
 
 export interface Player {
@@ -62,11 +68,11 @@ export interface TournamentSettings {
   name: string;
   types: string[];
   categories: string[];
-  announcement?: string;
 }
 
 export interface Tournament {
   id: string;
+  ownerId: string; // SaaS: Links tournament to a specific user
   createdAt: string;
   settings: TournamentSettings;
   players: Player[];

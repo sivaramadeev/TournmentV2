@@ -1,17 +1,18 @@
 
 import React from 'react';
-import { View, TournamentStatus } from '../types';
-import { EyeIcon, AdminIcon } from './icons';
+import { View, TournamentStatus, User } from '../types';
+import { EyeIcon, AdminIcon, KeyIcon, TennisIcon } from './icons';
 
 interface HeaderProps {
     currentView: View;
     setCurrentView: (view: View) => void;
-    isAdminLoggedIn: boolean;
+    currentUser: User | null;
     onLogout: () => void;
     tournamentStatus: TournamentStatus;
+    onChangePassword?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, isAdminLoggedIn, onLogout, tournamentStatus }) => {
+const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, currentUser, onLogout, tournamentStatus, onChangePassword }) => {
     const getStatusChip = () => {
         switch (tournamentStatus) {
             case 'Published':
@@ -29,37 +30,54 @@ const Header: React.FC<HeaderProps> = ({ currentView, setCurrentView, isAdminLog
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     <div className="flex items-center space-x-4">
-                        <h1 className="text-2xl font-bold text-white">Tournament Manager</h1>
-                        {isAdminLoggedIn && getStatusChip()}
+                        <div className="flex items-center gap-2 cursor-pointer" onClick={() => setCurrentView('player')}>
+                            <TennisIcon className="w-8 h-8 text-lime-400" />
+                            <h1 className="text-xl md:text-2xl font-bold text-white">TournManager <span className="text-xs font-normal text-brand-primary bg-brand-primary/10 px-1 rounded border border-brand-primary/50">SaaS</span></h1>
+                        </div>
+                        {currentUser && currentView === 'admin' && getStatusChip()}
                     </div>
-                    <nav className="flex items-center space-x-4">
+                    <nav className="flex items-center space-x-2 md:space-x-4">
                         <button
                             onClick={() => setCurrentView('player')}
                             className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${currentView === 'player' ? 'bg-brand-primary text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
                         >
-                           <EyeIcon className="w-5 h-5"/> Player View
+                           <EyeIcon className="w-5 h-5"/> <span className="hidden md:inline">Public Hub</span>
                         </button>
-                        {isAdminLoggedIn ? (
+                        {currentUser ? (
                             <>
                                 <button
                                     onClick={() => setCurrentView('admin')}
                                     className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${currentView === 'admin' ? 'bg-brand-primary text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
                                 >
-                                    <AdminIcon className="w-5 h-5"/> Admin
+                                    <AdminIcon className="w-5 h-5"/> 
+                                    <span className="hidden md:inline">My Dashboard</span>
                                 </button>
-                                <button
-                                    onClick={onLogout}
-                                    className="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-red-700 hover:text-white transition-colors"
-                                >
-                                    Logout
-                                </button>
+                                <div className="h-6 w-px bg-gray-600 mx-2 hidden md:block"></div>
+                                <div className="flex items-center gap-2">
+                                    <span className="text-xs text-gray-400 hidden lg:block">Hello, {currentUser.name}</span>
+                                    {onChangePassword && (
+                                        <button
+                                            onClick={onChangePassword}
+                                            className="p-2 rounded-md text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
+                                            title="Change Password"
+                                        >
+                                            <KeyIcon className="w-5 h-5"/>
+                                        </button>
+                                    )}
+                                    <button
+                                        onClick={onLogout}
+                                        className="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-red-900/50 hover:text-red-200 transition-colors border border-transparent hover:border-red-800"
+                                    >
+                                        Logout
+                                    </button>
+                                </div>
                             </>
                         ) : (
                             <button
                                 onClick={() => setCurrentView('login')}
-                                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${currentView === 'login' ? 'bg-brand-primary text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
+                                className={`px-4 py-2 rounded-md text-sm font-bold transition-colors ${currentView === 'login' ? 'bg-brand-primary text-white' : 'bg-gray-700 text-white hover:bg-gray-600'}`}
                             >
-                                Admin Login
+                                Sign In / Register
                             </button>
                         )}
                     </nav>

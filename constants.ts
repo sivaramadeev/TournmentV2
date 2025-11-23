@@ -1,11 +1,11 @@
 
 import { Tournament } from './types';
 
-export const ADMIN_USERNAME = 'admin';
-export const ADMIN_PASSWORD = 'password';
+// Admin credentials removed in favor of dynamic authService
 
 export const DEFAULT_TOURNAMENT: Tournament = {
   id: 'default',
+  ownerId: '',
   createdAt: '',
   settings: {
     name: '',
